@@ -1,16 +1,10 @@
-FROM docker:1.12
+FROM openjdk:8-jdk
 
-RUN apk add --no-cache --update \
- protobuf=2.6.1-r4 \
- git \
- openssh-client \
- bash
+RUN apt-get update && apt-get install -y protobuf-compiler
 
+# Install Docker from Docker Inc. repositories.
+RUN curl -sSL https://get.docker.com/ | sh
 ENV DOCKER_HOST tcp://docker:2375
-
-ENV JAVA_HOME=/usr/lib/jvm/default-jvm
-RUN apk add --no-cache openjdk8 && \
-    ln -sf "${JAVA_HOME}/bin/"* "/usr/bin/"
 
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 RUN chmod +x ./kubectl
